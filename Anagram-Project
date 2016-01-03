@@ -1,0 +1,108 @@
+import java.io.*; // for reading in file
+import java.util.Arrays; // for Arrays.equals method
+import java.util.LinkedList; // for hash structure
+
+class Element{ // an Element has a key/ID and a list of strings with the same key/ID
+  private char[] key;
+  private LinkedList<String> strlist; // this contains strings with the same key
+
+  Element(char[] key, LinkedList<String> strlist){
+    this.key = key;
+    this.strlist = strlist;
+  }
+  char[] getKey(){ // the word in alphabetical order, for example, the key of apple would be aelpp
+    return key;
+  }
+  LinkedList<String> getStrlist(){ // strings that are anagrams with each other would be in here together
+    return strlist;
+  }
+}
+
+class Cell{ // this is like a slot of hash table, and inside these cells are elements
+  private LinkedList<Element> cell;
+
+  Cell(LinkedList<Element> cell){
+    this.cell = cell;
+  }
+  LinkedList<Element> getCell(){
+    return cell;
+  }
+}
+
+public class Anagram{
+
+  public static void main(String[] args){
+
+    String fileName = "dict1"; // change this to get different outputs
+    String line = null;
+    Cell[] hash = new Cell[500000]; // hash table is an array of cells
+    for(int i = 0; i < hash.length; i++){
+      hash[i] = new Cell(new LinkedList<Element>()); // initialize
+    }
+
+    try{
+      FileReader FileReader = new FileReader(fileName); // read in file and read in words
+      BufferedReader bufferedReader = new BufferedReader(FileReader); // read in file and read in words
+      while((line = bufferedReader.readLine()) != null){ // in loop, decide the key by iterating the word 
+        int key = hashFunction(line); // this is the key int
+        LinkedList<String> ll = new LinkedList<String>();
+        ll.add(line);
+        if(hash[key].getCell().size() == 0){ // if cell has no elements yet
+          hash[key].getCell().add(new Element(sortToKey(line.toCharArray()),ll)); // put new element inside cell
+        }
+        else{ // if collision
+          Cell c = hash[key];
+          for(int i = 0; i < c.getCell().size(); i++){ // iterate through the cell (go through the elements)
+            if(Arrays.equals(sortToKey(line.toCharArray()), c.getCell().get(i).getKey())){ // if in same anagram class
+              c.getCell().get(i).getStrlist().add(line); // add this word to the element
+              break;
+            }
+            else if(i == c.getCell().size()-1){ // did not find any anagram class, so make new anagram class
+              c.getCell().add(new Element(sortToKey(line.toCharArray()), ll)); // put new element at the end of cell
+              break;
+            }
+          }
+        }
+
+    }
+    bufferedReader.close();
+    // int total = 0;
+    for(int i = 0; i < hash.length; i++){
+      if(hash[i].getCell().size() != 0){
+        for(int j = 0; j < hash[i].getCell().size(); j++){
+          System.out.println(hash[i].getCell().get(j).getStrlist()); // we print out the anagram classes
+          // total++;
+        }
+        
+      }
+    }
+    // System.out.println(total);
+  }
+
+  catch(IOException ex){
+    System.out.println("ERROR: Cannot read " + fileName);
+  }
+}
+
+  public static char[] sortToKey(char[] ca){ // I use bubblesort because I am familiar with it
+      for(int i = 0; i < ca.length; i++){ // compare this index with...
+        for(int j = 1; j < (ca.length)-i; j++){ // with other indices
+          if(ca[j] < ca[j-1]){ // then swap j-1 and j (adjacent two)
+            char temp = ca[j];
+            ca[j] = ca[j-1];
+            ca[j-1] = temp;
+          }
+        }
+      }
+      return ca;
+    }
+
+    public static int hashFunction(String s){ // this produces a key/index for word to be put in hash table
+    int key = 0;
+    for(int i = 0; i < s.length(); i++){
+      key = key+(int)s.charAt(i)*13; // just chose 13 because it is prime
+    }
+    key = key % 500000; // range: 0-499999
+    return key;
+  }
+}
