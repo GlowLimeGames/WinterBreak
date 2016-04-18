@@ -21,6 +21,8 @@ public class FirstPersonController : MonoBehaviour {
 	public bool sprint = false;
 	public float endSprint = 0f;
 	public float invulnTime = 0f;
+	public GameObject enemy;
+	public EnemyAI enemyai;
 
 	PlayerHealth playerHealth;
 
@@ -30,6 +32,8 @@ public class FirstPersonController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		enemy = GameObject.FindGameObjectWithTag ("Enemy");
+		enemyai = enemy.GetComponent<EnemyAI>();
 		gameOver = false;
 		fader = GameObject.FindGameObjectWithTag ("ScreenFader");
 		itemScript = GameObject.FindGameObjectWithTag ("Terrain");
@@ -134,7 +138,6 @@ public class FirstPersonController : MonoBehaviour {
     }*/
 
 	void OnTriggerEnter (Collider col){
-		print (col.gameObject.name);
 		if (col.gameObject.name == "Powerup(Clone)") {
 			int powerupVal = col.gameObject.GetComponent<ItemManager> ().getVal ();
 			if (powerupVal == 0 && playerHealth.currentHealth < 12) {
@@ -193,6 +196,12 @@ public class FirstPersonController : MonoBehaviour {
 
 		if (col.gameObject.name == "PowerupHealth" || col.gameObject.tag == "PowerupHealth") {
 			Destroy (col.gameObject);
+		}
+		if(col.gameObject.name == "PowerupStopAggro"){
+			print ("enemy.transform.position");
+			enemyai.pauseposition = enemy.transform.position; 
+			enemyai.chasePlayer = false;
+			enemyai.hitSomething = true;
 		}
 	}
 
