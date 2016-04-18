@@ -15,7 +15,7 @@ public class PlayerHealth : MonoBehaviour {
 	public Texture[] images = new Texture[4];
 
 	bool isDead;
-	bool damaged;
+//	bool damaged;
 
 //	private ArrayList pizzas = new ArrayList ();
 //	public int maxPizzasPerRow;
@@ -118,7 +118,7 @@ public class PlayerHealth : MonoBehaviour {
 
 	public void TakeDamage(int amount){
 //		// Set the damaged flag so the screen will flash. (won't flash for now)
-		damaged = true;
+//		damaged = true;
 //
 //		// Reduce the current health by the damage amount.
 		currentHealth -= 1;

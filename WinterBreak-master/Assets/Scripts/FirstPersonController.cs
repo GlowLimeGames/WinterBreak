@@ -40,7 +40,6 @@ public class FirstPersonController : MonoBehaviour {
 		GameObject temp = GameObject.FindGameObjectWithTag ("HealthSlider"); //
 		if (temp != null) { //
 			playerHealth = temp.GetComponent<PlayerHealth> (); //
-//			pizzas = new Texture[pizzaIndex];
 		} //
 		GameObject temp2 = GameObject.FindGameObjectWithTag ("SprintSlider"); //
 		if (temp2 != null) { //
